@@ -1,0 +1,18 @@
+
+import os
+import requests
+
+#add access token to clone private repos too
+token = ""
+username = "KathrinBeaver"
+userProjects = f"https://api.github.com/users/{username}/repos?per_page=1000"
+if token:
+    userProjects += f"?access_token={token}"
+
+if __name__ == '__main__':
+    projects = requests.get(userProjects).json()
+    urls = list(map(lambda project: project['clone_url'], projects))
+    print("\n".join(urls))
+    for url in urls:
+        stream = os.popen(f"git clone {url}")
+        print(stream.read())
